@@ -5,7 +5,9 @@
   "main": "backend/index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon backend/index.js"
+     "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "vercel-start": "node server.js"
   },
   "keywords": [
     "login",
