@@ -1,10 +1,9 @@
 import express from "express";
-import { connectDB } from "../DB/connectDB.js";
+import mongoose from "mongoose";
 import authRoutes from "../routes/authRoutes.js";
 import cors from "cors";
-import cookieParser from "cookie-parser";
+import morgan from "morgan";
 import dotenv from "dotenv";
-import serverless from "serverless-http";
 
 dotenv.config();
 
@@ -47,8 +46,8 @@ app.use((req, res, next) => {
 });
 app.use("/api/auth", authRoutes);
 
-
-module.exports = app;
+// ✅ Export for Vercel
+export const handler = serverless(app);
 
 // import express from 'express';
 // import dotenv from 'dotenv';
