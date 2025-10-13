@@ -8,22 +8,47 @@ import serverless from "serverless-http";
 
 dotenv.config();
 
+let isConnected = false; // connection cache
+
+const connectDB = async () => {
+  if (isConnected) {
+    console.log("✅ MongoDB already connected");
+    return;
+  }
+
+  try {
+    const conn = await mongoose.connect(process.env.MONGO_URL, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+
+    isConnected = conn.connections[0].readyState;
+    console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
+  } catch (error) {
+    console.error("❌ MongoDB connection error:", error);
+    process.exit(1);
+  }
+};
+
+
 const app = express();
 
-app.use(
-  cors({
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
-    credentials: true,
-  })
-);
-
+// middlewares
 app.use(express.json());
-app.use(cookieParser());
+app.use(cors());
+app.use(morgan("dev"));
+app.use((req, res, next) => {
+  if (isConnected) {
+    connectDB();
+    console.log("✅ MongoDB already connected");
+   
+  }
+  next();
+});
 app.use("/api/auth", authRoutes);
 
-connectDB();
 
-export const handler = serverless(app);
+module.exports = app;
 
 // import express from 'express';
 // import dotenv from 'dotenv';
