@@ -1,54 +1,38 @@
 import express from "express";
-import { connectDB } from "../DB/connectDB.js";
+import mongoose from "mongoose";
 import authRoutes from "../routes/authRoutes.js";
 import cors from "cors";
-import cookieParser from "cookie-parser";
+import morgan from "morgan";
 import dotenv from "dotenv";
 import serverless from "serverless-http";
 
 dotenv.config();
 
-let isConnected = false; // connection cache
+let isConnected = false;
 
 const connectDB = async () => {
-  if (isConnected) {
-    console.log("✅ MongoDB already connected");
-    return;
-  }
-
+  if (isConnected) return;
   try {
-    const conn = await mongoose.connect(process.env.MONGO_URL, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-
+    const conn = await mongoose.connect(process.env.MONGO_URL);
     isConnected = conn.connections[0].readyState;
     console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
-    console.error("❌ MongoDB connection error:", error);
-    process.exit(1);
+    console.error("❌ MongoDB connection error:", error.message);
   }
 };
 
+await connectDB(); // Connect once at cold start
 
 const app = express();
 
-// middlewares
 app.use(express.json());
-app.use(cors());
+app.use(cors({ origin: process.env.CLIENT_URL || "*" }));
 app.use(morgan("dev"));
-app.use((req, res, next) => {
-  if (isConnected) {
-    connectDB();
-    console.log("✅ MongoDB already connected");
-   
-  }
-  next();
-});
+
 app.use("/api/auth", authRoutes);
 
-// ✅ Export for Vercel
 export const handler = serverless(app);
+
 
 // import express from 'express';
 // import dotenv from 'dotenv';
