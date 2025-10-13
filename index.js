@@ -47,8 +47,8 @@ app.use((req, res, next) => {
 });
 app.use("/api/auth", authRoutes);
 
-
-module.exports = app;
+// ✅ Export for Vercel
+export const handler = serverless(app);
 
 // import express from 'express';
 // import dotenv from 'dotenv';
