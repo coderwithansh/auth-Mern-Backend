@@ -212,7 +212,7 @@ export const resetPassword = async (req, res) => {
     console.log("Error in resetPasword ", error);
     res.status(400).json({
       success: false,
-      message: error.message,
+      message: error.message
     });
   }
 };
