@@ -9,13 +9,8 @@
     "start": "node server.js",
     "vercel-start": "node server.js"
   },
-  "keywords": [
-    "login",
-    "signup",
-    "express",
-    "nodejs"
-  ],
-  "author": "",
+  
+  "author": "ansh",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^6.0.0",
