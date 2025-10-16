@@ -1,13 +1,14 @@
 // File: api/index.js
 import express from "express";
 import { connectDB } from "../DB/connectDB.js";
-import authRoutes from "../routes/authRoutes.js";
+import mongoose from "mongoose";
 import cors from "cors";
 import morgan from "morgan";
 import dotenv from "dotenv";
 import serverless from "serverless-http";
+import { verifyToken } from "./middleware/verifyToken.js";
+import { checkAuth, forgotPassword, login, logout, resetPassword, signup, verifyEmail } from "./controller/authController.js";
 
-import authRoutes from "../routes/authRoutes.js"; // Adjust path if needed
 
 dotenv.config();
 
@@ -46,8 +47,19 @@ app.use((req, res, next) => {
   }
   next();
 });
-app.use("/api/auth", authRoutes);
+//routes
 
+
+router.get("/check-auth", verifyToken, checkAuth); //checkth);
+
+router.post("/signup", signup);    
+router.post("/login", login);
+router.post("/logout", logout);
+
+router.post("/verify-email",verifyEmail);
+router.post("/forgot-password",forgotPassword);
+
+router.post("/reset-password/:token",resetPassword);
 
 export const handler = serverless(app);
 
