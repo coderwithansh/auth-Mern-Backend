@@ -1,6 +1,5 @@
 // File: api/index.js
 import express from "express";
-import { connectDB } from "../DB/connectDB.js";
 import mongoose from "mongoose";
 import cors from "cors";
 import morgan from "morgan";
