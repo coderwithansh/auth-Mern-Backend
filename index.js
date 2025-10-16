@@ -1,53 +1,59 @@
+// File: api/index.js
 import express from "express";
 import mongoose from "mongoose";
-import authRoutes from "../routes/authRoutes.js";
 import cors from "cors";
 import morgan from "morgan";
 import dotenv from "dotenv";
+import serverless from "serverless-http";
+
+import authRoutes from "../routes/authRoutes.js"; // Adjust path if needed
 
 dotenv.config();
 
-let isConnected = false; // connection cache
+let isConnected = false;
 
+// Database connection (optimized for Vercel cold starts)
 const connectDB = async () => {
-  if (isConnected) {
-    console.log("✅ MongoDB already connected");
-    return;
-  }
-
+  if (isConnected) return;
   try {
     const conn = await mongoose.connect(process.env.MONGO_URL, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
+      dbName: process.env.DB_NAME || "defaultDB", // optional
     });
-
-    isConnected = conn.connections[0].readyState;
+    isConnected = conn.connections[0].readyState === 1; // connected state
     console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
-    console.error("❌ MongoDB connection error:", error);
-    process.exit(1);
+    console.error("❌ MongoDB connection error:", error.message);
+    throw new Error("Database connection failed");
   }
 };
 
-
+// Initialize Express app
 const app = express();
 
-// middlewares
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL || "*",
+    credentials: true,
+  })
+);
 app.use(morgan("dev"));
-app.use((req, res, next) => {
-  if (isConnected) {
-    connectDB();
-    console.log("✅ MongoDB already connected");
-   
+
+// Connect DB before handling routes (cold starts)
+app.use(async (req, res, next) => {
+  if (!isConnected) {
+    await connectDB();
   }
   next();
 });
+
 app.use("/api/auth", authRoutes);
 
-// ✅ Export for Vercel
+// Export for Vercel
 export const handler = serverless(app);
+
 
 // import express from 'express';
 // import dotenv from 'dotenv';
