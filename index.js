@@ -4,9 +4,9 @@ import mongoose from "mongoose";
 import cors from "cors";
 import morgan from "morgan";
 import dotenv from "dotenv";
-import serverless from "serverless-http";
 import { verifyToken } from "./middleware/verifyToken.js";
 import { checkAuth, forgotPassword, login, logout, resetPassword, signup, verifyEmail } from "./controller/authController.js";
+import router from "./routes/authRoutes.js";
 
 
 dotenv.config();
@@ -49,18 +49,18 @@ app.use((req, res, next) => {
   next();
 });
 //routes
+app.use("/api/auth", router);
 
+// router.get("/check-auth", verifyToken, checkAuth); //checkth);
 
-router.get("/check-auth", verifyToken, checkAuth); //checkth);
+// router.post("/signup", signup);    
+// router.post("/login", login);
+// router.post("/logout", logout);
 
-router.post("/signup", signup);    
-router.post("/login", login);
-router.post("/logout", logout);
+// router.post("/verify-email",verifyEmail);
+// router.post("/forgot-password",forgotPassword);
 
-router.post("/verify-email",verifyEmail);
-router.post("/forgot-password",forgotPassword);
-
-router.post("/reset-password/:token",resetPassword);
+// router.post("/reset-password/:token",resetPassword);
 
 module.exports = app;
 
