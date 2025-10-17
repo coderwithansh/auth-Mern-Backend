@@ -32,6 +32,7 @@ const connectDB = async () => {
     process.exit(1);
   }
 };
+const app = express();
 
 // Initialize Express app
 // middlewares
