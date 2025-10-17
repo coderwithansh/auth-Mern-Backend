@@ -37,8 +37,9 @@ const app = express();
 // Initialize Express app
 // middlewares
 app.use(express.json());
-app.use(cors());
+app.use(cors({ origin: "*" }));
 app.use(morgan("dev"));
+
 app.use((req, res, next) => {
   if (isConnected) {
     connectDB();
@@ -61,7 +62,7 @@ router.post("/forgot-password",forgotPassword);
 
 router.post("/reset-password/:token",resetPassword);
 
-export const handler = serverless(app);
+module.exports = app;
 
 
 // import express from 'express';
