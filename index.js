@@ -4,10 +4,8 @@ import mongoose from "mongoose";
 import cors from "cors";
 import morgan from "morgan";
 import dotenv from "dotenv";
-import { verifyToken } from "./middleware/verifyToken.js";
-import { checkAuth, forgotPassword, login, logout, resetPassword, signup, verifyEmail } from "./controller/authController.js";
 import router from "./routes/authRoutes.js";
-
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 
@@ -38,32 +36,20 @@ const app = express();
 // middlewares
 app.use(express.json());
 app.use(cors({ origin: "*" }));
+app.use(cookieParser());
 app.use(morgan("dev"));
 
 app.use((req, res, next) => {
   if (isConnected) {
     connectDB();
     console.log("✅ MongoDB already connected");
-   
   }
   next();
 });
 //routes
 app.use("/api/auth", router);
 
-router.get("/check-auth", verifyToken, checkAuth); //checkth);
-
-router.post("/signup", signup);    
-router.post("/login", login);
-router.post("/logout", logout);
-
-router.post("/verify-email",verifyEmail);
-router.post("/forgot-password",forgotPassword);
-
-router.post("/reset-password/:token",resetPassword);
-
 module.exports = app;
-
 
 // import express from 'express';
 // import dotenv from 'dotenv';
@@ -79,7 +65,7 @@ module.exports = app;
 
 // app.use(cors({origin:"http://localhost:5173",credentials:true}));
 
-// app.use(express.json());//to allow the parse incoming request with JSON data(reuqest.body) 
+// app.use(express.json());//to allow the parse incoming request with JSON data(reuqest.body)
 // app.use(cookieParser());// allow us to parse incoming cookies
 
 // app.use("/api/auth",authRoutes);
