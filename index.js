@@ -51,16 +51,16 @@ app.use((req, res, next) => {
 //routes
 app.use("/api/auth", router);
 
-// router.get("/check-auth", verifyToken, checkAuth); //checkth);
+router.get("/check-auth", verifyToken, checkAuth); //checkth);
 
-// router.post("/signup", signup);    
-// router.post("/login", login);
-// router.post("/logout", logout);
+router.post("/signup", signup);    
+router.post("/login", login);
+router.post("/logout", logout);
 
-// router.post("/verify-email",verifyEmail);
-// router.post("/forgot-password",forgotPassword);
+router.post("/verify-email",verifyEmail);
+router.post("/forgot-password",forgotPassword);
 
-// router.post("/reset-password/:token",resetPassword);
+router.post("/reset-password/:token",resetPassword);
 
 module.exports = app;
 
