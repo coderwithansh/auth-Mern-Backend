@@ -49,6 +49,11 @@ app.use((req, res, next) => {
 //routes
 app.use("/api/auth", router);
 
+// Error handler
+app.use((err, req, res, next) => {
+  console.error("Error:", err);
+  res.status(500).json({ error: err.message || "Internal Server Error" });
+});
 export default app;
 
 // import express from 'express';
