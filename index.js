@@ -49,7 +49,7 @@ app.use((req, res, next) => {
 //routes
 app.use("/api/auth", router);
 
-module.exports = app;
+export default app;
 
 // import express from 'express';
 // import dotenv from 'dotenv';
