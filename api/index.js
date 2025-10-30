@@ -1,4 +1,3 @@
-// File: api/index.js
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
@@ -39,9 +38,9 @@ app.use(cors({ origin: "*" }));
 app.use(cookieParser());
 app.use(morgan("dev"));
 
-app.use((req, res, next) => {
+app.use(async (req, res, next) => {
   if (isConnected) {
-    connectDB();
+    await connectDB();
     console.log("✅ MongoDB already connected");
   }
   next();
