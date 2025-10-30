@@ -10,17 +10,10 @@ dotenv.config();
 const app = express();
 
 // --- CORS ---
-app.use(
-  cors({
-    origin: [
-      "http://localhost:5173",
-      "https://authentication-frontend-lac.vercel.app"
-    ],
-    credentials: true,
-  })
-);
-
-app.options("*", cors());
+app.use(cors({
+  origin: "https://authentication-frontend-lac.vercel.app",
+  credentials: true
+}));
 
 // --- Middlewares ---
 app.use(express.json());
