@@ -9,27 +9,23 @@ dotenv.config();
 
 const app = express();
 
-// --- CORS ---
 app.use(cors({
   origin: "https://authentication-frontend-lac.vercel.app",
-  credentials: true
+  credentials: true,
 }));
 
-// --- Middlewares ---
 app.use(express.json());
 app.use(cookieParser());
 
-// --- Mongo connection cached ---
-let conn = null;
+let isConnected = false;
+
 async function connectDB() {
-  if (conn) return;
-  conn = await mongoose.connect(process.env.MONGO_URL);
-  console.log("✅ MongoDB connected");
+  if (isConnected) return;
+  await mongoose.connect(process.env.MONGO_URL);
+  isConnected = true;
 }
 connectDB();
 
-// --- Routes ---
 app.use("/api/auth", router);
 
-// ✅ Export as serverless function
-export default app;
+export default app; // ✅ NO app.listen()
